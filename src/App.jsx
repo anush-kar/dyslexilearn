@@ -9,6 +9,7 @@ import Learn from './pages/Learn.jsx';
 import AlphabetPage from './pages/AlphabetPage.jsx';
 import WordsPage from './pages/WordsPage';
 import SentencesPage from './pages/SentencesPage';
+import QuizPage from './pages/QuizPage.jsx';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/alphabet" element={<AlphabetPage />} />
         <Route path="/words" element={<WordsPage />} />
         <Route path="/sentences" element={<SentencesPage />} />
+        <Route path="/quiz" element={<QuizPage />} />
       </Routes>
     </Router>
   );
