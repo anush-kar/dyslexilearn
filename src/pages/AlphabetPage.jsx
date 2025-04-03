@@ -1,56 +1,107 @@
-import React from 'react';
-import styled from 'styled-components';
-import AlphabetBox from '../components/AlphabetBox';
-import { ArrowBack } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import React, { useState } from "react";
+import styled from "styled-components";
+import FileUploader from "../components/FileUploader"; 
+import DrawingCanvas from "../components/DrawingCanvas"; // Import the DrawingCanvas component
 
-// Styled Components
-const ContainerOuter = styled.div`
-    display: flex;
-    justify-content: center;
-    height: 100vh;
-`;
-const Container = styled.div`
-  
-  max-width: 800px;
-`;
-
-const Title = styled.h1`
-  color: #4B0082;
+const PageContainer = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+`;
+
+const AlphabetDisplay = styled.h1`
+  font-size: 100px;
+  font-weight: bold;
+  color: #4B0082;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+`;
+
+const ActionButton = styled.button`
+  background-color: ${({ danger }) => (danger ? "#DC143C" : "#4B0082")};
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: ${({ danger }) => (danger ? "#B22222" : "#6A0DAD")};
+  }
 `;
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 16px;
-  margin-top: 32px;
+const Message = styled.p`
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: ${({ correct }) => (correct ? "green" : "red")};
 `;
 
-const AlphabetPage = ({ onBack }) => {
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const getRandomAlphabet = () => {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  return letters[Math.floor(Math.random() * letters.length)];
+};
+
+const AlphabetPage = () => {
+  const [currentLetter, setCurrentLetter] = useState(getRandomAlphabet());
+  const [verificationResult, setVerificationResult] = useState(null);
+
+  const handleCanvasSubmit = async (formData) => {
+    formData.append("text", currentLetter);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/learning/verify-letter`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      setVerificationResult(result.isCorrect);
+    } catch (error) {
+      console.error("Error verifying letter:", error);
+      setVerificationResult(false);
+    }
+  };
+
+  const handleFileUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("text", currentLetter);
+    await handleCanvasSubmit(formData);
+  };
+
+  const handleNext = () => {
+    setCurrentLetter(getRandomAlphabet());
+    setVerificationResult(null); // Reset verification result
+  };
 
   return (
-    <>
-        <Navbar activePage="alphabet" />
-        <ContainerOuter>
-            <Container>
-                <Title onClick={onBack}>
-                    <ArrowBack />
-                    Alphabet
-                </Title>
-                <Grid>
-                    {letters.map((letter) => (
-                    <AlphabetBox key={letter} letter={letter} />
-                    ))}
-                </Grid>
-            </Container>
-        </ContainerOuter>
-    </>
+    <PageContainer>
+      <AlphabetDisplay>{currentLetter}</AlphabetDisplay>
+
+      <DrawingCanvas onSubmit={handleCanvasSubmit} />
+
+      <ButtonContainer>
+        <FileUploader onFileSelect={handleFileUpload} />
+        <ActionButton onClick={handleNext}>Next ➡️</ActionButton>
+      </ButtonContainer>
+
+      {verificationResult !== null && (
+        <Message correct={verificationResult}>
+          {verificationResult ? "Correct ✅" : "Incorrect ❌"}
+        </Message>
+      )}
+    </PageContainer>
   );
 };
 

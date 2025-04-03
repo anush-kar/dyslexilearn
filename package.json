@@ -12,10 +12,13 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@ffmpeg/core": "^0.12.10",
+    "@ffmpeg/ffmpeg": "^0.12.15",
     "@mui/icons-material": "^6.4.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.0",
+    "recharts": "^2.15.1",
     "styled-components": "^6.1.16"
   },
   "devDependencies": {

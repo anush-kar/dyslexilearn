@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import SpeechAction from './SpeechAction'; // Import the new component
 
 const WordContainer = styled.div`
   display: flex;
@@ -11,27 +11,21 @@ const WordContainer = styled.div`
   font-size: 18px;
 `;
 
-const SoundButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #4B0082;
-  font-size: 24px;
-`;
-
 const Word = ({ word }) => {
-  const handlePlaySound = () => {
-    const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = 'en-US';
-    window.speechSynthesis.speak(utterance);
-  };
+  const [verificationResult, setVerificationResult] = useState(null);
 
   return (
     <WordContainer>
       <span>{word}</span>
-      <SoundButton onClick={handlePlaySound} title="Hear Pronunciation">
-        <VolumeUpIcon />
-      </SoundButton>
+      {
+        verificationResult === null ?
+        <SpeechAction word={word} setVerificationResult={setVerificationResult} /> : null
+      }
+      {verificationResult !== null && (
+        <p style={{ fontWeight: 'bold', color: verificationResult ? 'green' : 'red' }}>
+          {verificationResult ? 'Correct ✅' : 'Incorrect ❌'}
+        </p>
+      )}
     </WordContainer>
   );
 };

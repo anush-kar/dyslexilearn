@@ -1,43 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import SpeechAction from './SpeechAction'; // Import the new component
 
-const SentenceContainer = styled.div`
+const WordContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-radius: 12px;
-  border: 2px solid #ccc;
+  border-bottom: 1px solid #ccc;
   font-size: 18px;
-  margin-bottom: 20px;
-  background-color: #fff;
-  width: 100%;
 `;
 
-const SoundButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #4B0082;
-  font-size: 24px;
-`;
-
-const Sentence = ({ sentence }) => {
-  const handlePlaySound = () => {
-    const utterance = new SpeechSynthesisUtterance(sentence);
-    utterance.lang = 'en-US';
-    window.speechSynthesis.speak(utterance);
-  };
+const Word = ({ word }) => {
+  const [verificationResult, setVerificationResult] = useState(null);
 
   return (
-    <SentenceContainer>
-      <span>{sentence}</span>
-      <SoundButton onClick={handlePlaySound} title="Hear Sentence">
-        <VolumeUpIcon />
-      </SoundButton>
-    </SentenceContainer>
+    <WordContainer>
+      <span>{word}</span>
+      {
+        verificationResult === null ?
+        <SpeechAction word={word} setVerificationResult={setVerificationResult} /> : null
+      }
+      {verificationResult !== null && (
+        <p style={{ fontWeight: 'bold', color: verificationResult ? 'green' : 'red' }}>
+          {verificationResult ? 'Correct ✅' : 'Incorrect ❌'}
+        </p>
+      )}
+    </WordContainer>
   );
 };
 
-export default Sentence;
+export default Word;

@@ -67,7 +67,6 @@ const Navbar = ({ activePage, profileImage, onLogout }) => {
       <NavLinks>
         <a href="/learn" className={activePage === 'Learn' ? 'active' : ''}>Learn</a>
         <a href="/progress" className={activePage === 'Progress' ? 'active' : ''}>Progress</a>
-        <a href="/community" className={activePage === 'Community' ? 'active' : ''}>Community</a>
         <a href="/chat" className={activePage === 'Chat' ? 'active' : ''}>Chat</a>
         <a href="/consult" className={activePage === 'Consult' ? 'active' : ''}>Consult</a>
       </NavLinks>

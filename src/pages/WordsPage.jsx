@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../components/Navbar';
 import Word from '../components/Word';
@@ -24,29 +24,43 @@ const BackButton = styled.button`
 
 const WordsPage = () => {
   const navigate = useNavigate();
+  const [words, setWords] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const difficultWords = [
-    'aLReaDY',
-    'CounTRY',
-    'DIFFeRenT',
-    'ScHooL',
-    'unDeRSTanD',
-    'RecOGniZE',
-    'aChieveMENT',
-    'MiNUTE',
-    'DeVelop',
-    'EXpeRiMenT'
-  ];
+  useEffect(() => {
+    const fetchWords = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/learning/words`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch words');
+        }
+        const data = await response.json();
+        setWords(data); 
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWords();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
-      <Navbar activePage="Learn" profileImage="https://randomuser.me/api/portraits/women/30.jpg" />
+      {/* <Navbar activePage="Learn" profileImage="https://randomuser.me/api/portraits/women/30.jpg" /> */}
       <PageContainer>
         <BackButton onClick={() => navigate('/')}>← WORDS</BackButton>
         <Heading>Words</Heading>
-        {difficultWords.map((word, index) => (
-          <Word key={index} word={word} />
-        ))}
+        {words.length > 0 ? (
+          words.map((word, index) => <Word key={index} word={word.random_case} />)
+        ) : (
+          <p>No words available.</p>
+        )}
       </PageContainer>
     </div>
   );

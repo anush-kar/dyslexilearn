@@ -140,43 +140,9 @@ const Login = () => {
 
       {/* Google Sign-in Button */}
       <GoogleButton>
-        <img src="src\assets\google-icon.svg" alt="Google Logo" />
-        Log in with Google
+        <a href="http://localhost:8000/api/auth/accounts/google/login/"><img src="src\assets\google-icon.svg" alt="Google Logo" />
+        Log in with Google</a>
       </GoogleButton>
-
-      {/* Divider */}
-      <Divider>
-        <span>OR</span>
-      </Divider>
-
-      {/* Form */}
-      <Form>
-        <Label>Email</Label>
-        <Input type="email" placeholder="yourname@company.com" required />
-
-        <Label>Password</Label>
-        <PasswordWrapper>
-          <PasswordInput
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Enter your password"
-            required
-          />
-          <EyeIcon onClick={() => setShowPassword((prev) => !prev)}>
-            <span className="material-icons">
-              {showPassword ? 'visibility_off' : 'visibility'}
-            </span>
-          </EyeIcon>
-        </PasswordWrapper>
-
-        {/* Forgot Password */}
-        <Link href="#">Forgot password?</Link>
-
-        {/* Submit Button */}
-        <Button type="submit">Log in</Button>
-      </Form>
-
-      {/* Sign-up Link */}
-      <SmallText>Don’t have an account? <Link href="#">Sign up</Link></SmallText>
     </Container>
   );
 };

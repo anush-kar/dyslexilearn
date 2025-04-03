@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Logo from '../components/Logo';
 import Button from '../components/Button';
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -39,6 +40,7 @@ const Illustration = styled.img`
 `;
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <Container>
       <Content>
@@ -46,7 +48,7 @@ const Home = () => {
           <Logo />
           <Heading>The Learning App</Heading>
           <SubText>For dyslexic learners</SubText>
-          <Button text="Get Started" onClick={() => alert('Getting Started!')} />
+          <Button text="Get Started" onClick={() => navigate("/login")} />;
         </TextSection>
         <Illustration src="src\assets\illustration.svg" alt="Illustration" />
       </Content>

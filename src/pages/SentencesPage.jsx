@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../components/Navbar';
-import Sentence from '../components/Sentence';
+import Word from '../components/Word';
 import { useNavigate } from 'react-router-dom';
 
 const PageContainer = styled.div`
@@ -22,30 +22,48 @@ const BackButton = styled.button`
   margin-bottom: 20px;
 `;
 
-const SentencesPage = () => {
+const WordsPage = () => {
   const navigate = useNavigate();
+  const [words, setWords] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const sentences = [
-    'The happy dog jumped over the small rock and ran toward the big tree.',
-    'Lisa and Alice go to school daily.',
-    'The cat drank some milk and ate a mouse before sleeping.',
-    'The birds sang melodiously as the sun rose in the morning.',
-    'Sarah loves to paint pictures of flowers and animals.',
-    'John plays the piano beautifully at every family gathering.'
-  ];
+  useEffect(() => {
+    const fetchWords = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/learning/phrases`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch words');
+        }
+        const data = await response.json();
+        setWords(data); 
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWords();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
       <Navbar activePage="Learn" profileImage="https://randomuser.me/api/portraits/women/30.jpg" />
       <PageContainer>
-        <BackButton onClick={() => navigate('/')}>← SENTENCES</BackButton>
-        <Heading>Sentences</Heading>
-        {sentences.map((sentence, index) => (
-          <Sentence key={index} sentence={sentence} />
-        ))}
+        <BackButton onClick={() => navigate('/')}>← WORDS</BackButton>
+        <Heading>Phrases</Heading>
+        {words.length > 0 ? (
+          words.map((word, index) => <Word key={index} word={word.phrase} />)
+        ) : (
+          <p>No words available.</p>
+        )}
       </PageContainer>
     </div>
   );
 };
 
-export default SentencesPage;
+export default WordsPage;

@@ -56,9 +56,9 @@ const Learn = () => {
     }
   };
 
-  const handleQuizClick = () => {
-    navigate('/quiz');
-  }
+  // const handleQuizClick = () => {
+  //   navigate('/quiz');
+  // }
 
   return (
     <div>
@@ -71,10 +71,9 @@ const Learn = () => {
           <Option optionName="Alphabet" onClick={() => handleOptionClick('Alphabet')} />
           <Option optionName="Words" onClick={() => handleOptionClick('Words')} />
           <Option optionName="Sentences" onClick={() => handleOptionClick('Sentences')} />
-          <Option optionName="Passages" />
-          <ButtonContainer>
+          {/* <ButtonContainer>
             <Button text="quiz" onClick= {() => handleQuizClick()} />
-          </ButtonContainer>
+          </ButtonContainer> */}
 
         </ContainerInner>
       </ContainerOuter>
